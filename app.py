@@ -25,12 +25,13 @@ def load_model():
         encoding='utf-8'
     )
 
-    docs = loader.load()
+    # Create vector embeddings for the textbook
+    # docs = loader.load()
+    # chunk_size, chunk_overlap = 1000, 200
+    # text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    # splits = text_splitter.split_documents(docs)
 
-    chunk_size, chunk_overlap = 1000, 200
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    splits = text_splitter.split_documents(docs)
-    vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
+    vectorstore = Chroma(persist_directory="./chroma_db", embedding_function=OpenAIEmbeddings())
 
     # Retrieve and generate using the relevant snippets of the blog.
     retriever = vectorstore.as_retriever()
@@ -56,14 +57,11 @@ def generate_response(query):
 
 st.title('RAG LLM Textbook Assistant')
 
-# Input from user
 user_query = st.text_input("Enter your query:")
 
-# Button to trigger processing
 if st.button('Generate Response'):
     if user_query:
-        # This is where you integrate your RAG model code
-        response = generate_response(user_query)  # Implement this function
+        response = generate_response(user_query)
         st.write(response)
     else:
         st.write("Please enter a query to generate a response.")
