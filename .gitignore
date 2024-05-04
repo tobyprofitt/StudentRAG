@@ -1,3 +1,4 @@
 .env
 qa_chat.py
 /ragenv/
+/chroma_db/
